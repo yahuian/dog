@@ -1,0 +1,152 @@
+package api
+
+import (
+	"dog/errcode"
+	"dog/pkg/logger"
+	"dog/service/{{.PackageName}}"
+
+	"github.com/gin-gonic/gin"
+)
+
+type a{{.ModelName}} struct{}
+
+func {{.PackageName}}Api(e *gin.RouterGroup) {
+	var c a{{.ModelName}}
+
+	r := e.Group("/{{.PackageName}}")
+	{
+		r.GET("", c.List)
+		r.POST("", c.Create)
+		r.PUT("", c.Update)
+		r.DELETE("", c.Delete)
+		r.GET("/detail", c.Detail)
+	}
+}
+
+// @Accept json
+// @Produce	json
+// @Tags {{.PackageName}}
+// @Summary	列表
+// @Router /{{.PackageName}} [get]
+// @Param query query {{.PackageName}}.ListIn	false	"请求参数"
+// @Failure 400 {object} Resp "请求参数错误"
+// @Success 200 {object} Resp{data={{.PackageName}}.ListOut}
+func (a *a{{.ModelName}}) List(ctx *gin.Context) {
+	var in {{.PackageName}}.ListIn
+	if err := ctx.ShouldBindQuery(&in); err != nil {
+		logger.Warnln(err)
+		handleError(ctx, errcode.BadRequest(err))
+		return
+	}
+
+	out, err := {{.PackageName}}.List(ctx, in)
+	if err != nil {
+		logger.Errorln(err)
+		handleError(ctx, err)
+		return
+	}
+
+	Success(ctx, "ok", out)
+}
+
+// @Accept json
+// @Produce json
+// @Tags {{.PackageName}}
+// @Summary 创建
+// @Router /{{.PackageName}} [post]
+// @Param body body {{.PackageName}}.CreateIn false "请求参数"
+// @Failure 400 {object} Resp "请求参数错误"
+// @Success 200 {object} Resp{data={{.PackageName}}.CreateOut}
+func (a *a{{.ModelName}}) Create(ctx *gin.Context) {
+	var in {{.PackageName}}.CreateIn
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		logger.Warnln(err)
+		handleError(ctx, errcode.BadRequest(err))
+		return
+	}
+
+	out, err := {{.PackageName}}.Create(ctx, in)
+	if err != nil {
+		logger.Errorln(err)
+		handleError(ctx, err)
+		return
+	}
+
+	Success(ctx, "ok", out)
+}
+
+// @Accept json
+// @Produce json
+// @Tags {{.PackageName}}
+// @Summary 更新
+// @Router /{{.PackageName}} [put]
+// @Param body body {{.PackageName}}.UpdateIn false "请求参数"
+// @Failure 400 {object} Resp "请求参数错误"
+// @Success 200 {object} Resp
+func (a *a{{.ModelName}}) Update(ctx *gin.Context) {
+	var in {{.PackageName}}.UpdateIn
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		logger.Warnln(err)
+		handleError(ctx, errcode.BadRequest(err))
+		return
+	}
+
+	if err := {{.PackageName}}.Update(ctx, in); err != nil {
+		logger.Errorln(err)
+		handleError(ctx, err)
+		return
+	}
+
+	Success(ctx, "ok", nil)
+}
+
+// @Accept json
+// @Produce json
+// @Tags {{.PackageName}}
+// @Summary 删除
+// @Router /{{.PackageName}} [delete]
+// @Param body body {{.PackageName}}.DeleteIn false "请求参数"
+// @Failure 400 {object} Resp "请求参数错误"
+// @Success 200 {object} Resp
+func (a *a{{.ModelName}}) Delete(ctx *gin.Context) {
+	var in {{.PackageName}}.DeleteIn
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		logger.Warnln(err)
+		handleError(ctx, errcode.BadRequest(err))
+		return
+	}
+
+	if err := {{.PackageName}}.Delete(ctx, in); err != nil {
+		logger.Errorln(err)
+		handleError(ctx, err)
+		return
+	}
+
+	Success(ctx, "ok", nil)
+}
+
+// @Accept json
+// @Produce json
+// @Tags {{.PackageName}}
+// @Summary 详情
+// @Router /{{.PackageName}}/detail [get]
+// @Param query query {{.PackageName}}.DetailIn false "请求参数"
+// @Failure 400 {object} Resp "请求参数错误"
+// @Success 200 {object} Resp{data={{.PackageName}}.DetailOut}
+func (a *a{{.ModelName}}) Detail(ctx *gin.Context) {
+	var in {{.PackageName}}.DetailIn
+	if err := ctx.ShouldBindQuery(&in); err != nil {
+		logger.Warnln(err)
+		handleError(ctx, errcode.BadRequest(err))
+		return
+	}
+
+	out, err := {{.PackageName}}.Detail(ctx, in)
+	if err != nil {
+		logger.Errorln(err)
+		handleError(ctx, err)
+		return
+	}
+
+	Success(ctx, "ok", out)
+}

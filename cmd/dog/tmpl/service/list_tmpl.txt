@@ -1,0 +1,37 @@
+package {{.PackageName}}
+
+import (
+	"context"
+	"dog/model"
+	"dog/service"
+)
+
+type ListIn struct {
+	service.Paging
+}
+
+type ListOut struct {
+	List  []model.{{.ModelName}} `json:"list"`
+	Total int64        `json:"total"`
+}
+
+func List(ctx context.Context, in ListIn) (ListOut, error) {
+	{{.PackageName}}Model := model.New{{.ModelName}}Model()
+
+	opt := model.ListOption{
+		Page: in.Page,
+		Size: in.Size,
+	}
+
+	list, total, err := {{.PackageName}}Model.GetList(ctx, opt)
+	if err != nil {
+		return ListOut{}, err
+	}
+
+	res := ListOut{
+		List:  list,
+		Total: total,
+	}
+
+	return res, nil
+}

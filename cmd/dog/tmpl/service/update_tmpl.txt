@@ -1,0 +1,34 @@
+package {{.PackageName}}
+
+import (
+	"context"
+	"dog/errcode"
+	"dog/model"
+)
+
+type UpdateIn struct {
+	ID uint `validate:"required"`
+	CreateIn
+}
+
+func Update(ctx context.Context, in UpdateIn) error {
+	{{.PackageName}}Model := model.New{{.ModelName}}Model()
+
+	count, err := {{.PackageName}}Model.Count(ctx, "id = ?", in.ID)
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		return errcode.NotFoundErr
+	}
+
+	data := map[string]any{
+		// TODO fill your fields
+	}
+
+	if err := {{.PackageName}}Model.UpdateByID(ctx, data, in.ID); err != nil {
+		return err
+	}
+
+	return nil
+}

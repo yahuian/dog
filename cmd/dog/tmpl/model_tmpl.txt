@@ -1,0 +1,125 @@
+package model
+
+import (
+	"context"
+	"dog/errcode"
+	"time"
+
+	"gorm.io/gorm"
+)
+
+type {{.ModelName}} struct {
+	ID        uint           `json:"id" gorm:"column:id"`
+	// TODO
+	CreatedAt time.Time      `json:"created_at" gorm:"column:created_at"`
+	UpdatedAt time.Time      `json:"updated_at" gorm:"column:updated_at"`
+	DeletedAt gorm.DeletedAt `json:"-" gorm:"column:deleted_at"`
+}
+
+type {{.ModelName}}Model struct {
+	table string
+}
+
+func New{{.ModelName}}Model() *{{.ModelName}}Model {
+	return &{{.ModelName}}Model{
+		table: "", // TODO
+	}
+}
+
+func (m *{{.ModelName}}Model) db(ctx context.Context) *gorm.DB {
+	return getDB().Table(m.table).WithContext(ctx)
+}
+
+func (m *{{.ModelName}}Model) Create(ctx context.Context, data *{{.ModelName}}) error {
+	res := m.db(ctx).Create(data)
+
+	if res.Error != nil {
+		return errcode.Server(res.Error)
+	}
+
+	return nil
+}
+
+func (m *{{.ModelName}}Model) GetOneByID(ctx context.Context, id uint) ({{.ModelName}}, error) {
+	return m.GetOne(ctx, "id = ?", id)
+}
+
+func (m *{{.ModelName}}Model) GetOne(ctx context.Context, query any, args ...any) ({{.ModelName}}, error) {
+	var data {{.ModelName}}
+
+	res := m.db(ctx).Where(query, args...).Limit(1).Find(&data)
+	if res.Error != nil {
+		return {{.ModelName}}{}, errcode.Server(res.Error)
+	}
+
+	if data.ID == 0 {
+		return {{.ModelName}}{}, errcode.NotFoundErr
+	}
+
+	return data, nil
+}
+
+func (m *{{.ModelName}}Model) GetList(ctx context.Context, opt ListOption) ([]{{.ModelName}}, int64, error) {
+	var (
+		list  []{{.ModelName}}
+		total int64
+	)
+
+	query := m.db(ctx).Where(opt.Query, opt.Args...)
+
+	res := query.Model(&{{.ModelName}}{}).Count(&total)
+	if res.Error != nil {
+		return nil, 0, errcode.Server(res.Error)
+	}
+
+	if total <= 0 {
+		return []{{.ModelName}}{}, 0, nil
+	}
+
+	offset := (opt.Page - 1) * opt.Size
+	res = query.Offset(offset).Limit(opt.Size).Order(opt.Order).Order("id DESC").Find(&list)
+	if res.Error != nil {
+		return nil, 0, errcode.Server(res.Error)
+	}
+
+	return list, total, nil
+}
+
+func (m *{{.ModelName}}Model) Count(ctx context.Context, query any, args ...any) (int64, error) {
+	var total int64
+
+	res := m.db(ctx).Model(&{{.ModelName}}{}).Where(query, args...).Count(&total)
+	if res.Error != nil {
+		return 0, errcode.Server(res.Error)
+	}
+
+	return total, nil
+}
+
+func (m *{{.ModelName}}Model) UpdateByID(ctx context.Context, data map[string]any, id uint) error {
+	return m.Update(ctx, data, "id = ?", id)
+}
+
+func (m *{{.ModelName}}Model) Update(ctx context.Context, data map[string]any, query any, args ...any) error {
+	res := m.db(ctx).Model(&{{.ModelName}}{}).Where(query, args...).Updates(data)
+
+	if res.Error != nil {
+		return errcode.Server(res.Error)
+	}
+
+	return nil
+}
+
+func (m *{{.ModelName}}Model) DeleteByID(ctx context.Context, id uint) error {
+	return m.Delete(ctx, "id = ?", id)
+}
+
+func (m *{{.ModelName}}Model) Delete(ctx context.Context, query any, args ...any) error {
+	res := m.db(ctx).Where(query, args...).Delete(&{{.ModelName}}{})
+
+	if res.Error != nil {
+		return errcode.Server(res.Error)
+	}
+
+	return nil
+}

@@ -1,0 +1,33 @@
+package {{.PackageName}}
+
+import (
+	"context"
+	"dog/model"
+	"fmt"
+)
+
+type CreateIn struct {
+	// TODO fill your fields
+}
+
+type CreateOut struct {
+	{{.ModelName}} model.{{.ModelName}} `json:"{{.PackageName}}"`
+}
+
+func Create(ctx context.Context, in CreateIn) (CreateOut, error) {
+	{{.ModelName}}Model := model.New{{.ModelName}}Model()
+
+	data := model.{{.ModelName}}{
+		// TODO fill your fields
+	}
+
+	if err := {{.ModelName}}Model.Create(ctx, &data); err != nil {
+		return CreateOut{}, fmt.Errorf("dao create {{.PackageName}} err: %w", err)
+	}
+
+	res := CreateOut{
+		{{.ModelName}}: data,
+	}
+
+	return res, nil
+}

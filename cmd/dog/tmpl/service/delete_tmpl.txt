@@ -1,0 +1,33 @@
+package {{.PackageName}}
+
+import (
+	"context"
+	"dog/errcode"
+	"dog/model"
+)
+
+type DeleteIn struct {
+	IDS []uint `json:"ids" validate:"max=100"`
+}
+
+func Delete(ctx context.Context, in DeleteIn) error {
+	{{.PackageName}}Model := model.New{{.ModelName}}Model()
+
+	query := "id IN ?"
+	args := in.IDS
+
+	total, err := {{.PackageName}}Model.Count(ctx, query, args)
+	if err != nil {
+		return err
+	}
+
+	if int(total) != len(in.IDS) {
+		return errcode.NotFoundErr
+	}
+
+	if err := {{.PackageName}}Model.Delete(ctx, query, args); err != nil {
+		return err
+	}
+
+	return nil
+}

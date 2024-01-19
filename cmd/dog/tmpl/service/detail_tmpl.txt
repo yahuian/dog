@@ -1,0 +1,29 @@
+package {{.PackageName}}
+
+import (
+	"context"
+	"dog/model"
+)
+
+type DetailIn struct {
+	ID uint `form:"id" validate:"gt=0"`
+}
+
+type DetailOut struct {
+	{{.ModelName}} model.{{.ModelName}} `json:"{{.PackageName}}"`
+}
+
+func Detail(ctx context.Context, in DetailIn) (DetailOut, error) {
+	{{.PackageName}}Model := model.New{{.ModelName}}Model()
+
+	data, err := {{.PackageName}}Model.GetOneByID(ctx, in.ID)
+	if err != nil {
+		return DetailOut{}, err
+	}
+
+	res := DetailOut{
+		{{.ModelName}}: data,
+	}
+
+	return res, nil
+}

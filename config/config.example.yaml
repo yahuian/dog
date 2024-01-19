@@ -1,0 +1,13 @@
+Server:
+  Address: "0.0.0.0:8080"
+  Mode: debug
+DB:
+  DSN: "root:$PASSWORD@tcp($HOST:3306)/$DATABASE?loc=Local&parseTime=true"
+Logger:
+  Level: info
+  # 参数含义看 pkg/logger
+  Filename: "./logs/dog.log"
+  MaxSize: 100
+  MaxAge: 30
+  Compress: true
+  SplitTime: 24
