@@ -61,7 +61,12 @@ go run cmd/dog/main.go -p_name=user -m_name=User
 
 # 创建好数据表并补充字段
 
+# 生成 api 文档
+# 如果有依赖底层库的结构如 gorm.Model 则需要添加 --parseDependency 参数（生成速度会慢）
+swag init
+
 # 启动
+# .air.toml bin = "./tmp/main -config=config/config.yaml" 可以指定配置文件
 air
 ```
 
