@@ -7,7 +7,7 @@ import (
 )
 
 type UpdateIn struct {
-	ID uint `validate:"required"`
+	ID uint `json:"id" validate:"required"`
 	CreateIn
 }
 
@@ -16,7 +16,7 @@ func Update(ctx context.Context, in UpdateIn) error {
 
 	count, err := {{.PackageName}}Model.Count(ctx, "id = ?", in.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("model count {{.PackageName}} err: %w", err)
 	}
 	if count == 0 {
 		return errcode.NotFoundErr
@@ -27,7 +27,7 @@ func Update(ctx context.Context, in UpdateIn) error {
 	}
 
 	if err := {{.PackageName}}Model.UpdateByID(ctx, data, in.ID); err != nil {
-		return err
+		return fmt.Errorf("model update {{.PackageName}} err: %w", err)
 	}
 
 	return nil

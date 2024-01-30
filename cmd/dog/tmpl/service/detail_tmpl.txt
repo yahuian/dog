@@ -18,7 +18,7 @@ func Detail(ctx context.Context, in DetailIn) (DetailOut, error) {
 
 	data, err := {{.PackageName}}Model.GetOneByID(ctx, in.ID)
 	if err != nil {
-		return DetailOut{}, err
+		return DetailOut{}, fmt.Errorf("model get one {{.PackageName}} err: %w", err)
 	}
 
 	res := DetailOut{

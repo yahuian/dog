@@ -15,14 +15,14 @@ type CreateOut struct {
 }
 
 func Create(ctx context.Context, in CreateIn) (CreateOut, error) {
-	{{.ModelName}}Model := model.New{{.ModelName}}Model()
+	{{.PackageName}}Model := model.New{{.ModelName}}Model()
 
 	data := model.{{.ModelName}}{
 		// TODO fill your fields
 	}
 
-	if err := {{.ModelName}}Model.Create(ctx, &data); err != nil {
-		return CreateOut{}, fmt.Errorf("dao create {{.PackageName}} err: %w", err)
+	if err := {{.PackageName}}Model.Create(ctx, &data); err != nil {
+		return CreateOut{}, fmt.Errorf("model create {{.PackageName}} err: %w", err)
 	}
 
 	res := CreateOut{

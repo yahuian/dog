@@ -18,7 +18,7 @@ func Delete(ctx context.Context, in DeleteIn) error {
 
 	total, err := {{.PackageName}}Model.Count(ctx, query, args)
 	if err != nil {
-		return err
+		return fmt.Errorf("model count {{.PackageName}} err: %w", err)
 	}
 
 	if int(total) != len(in.IDS) {
@@ -26,7 +26,7 @@ func Delete(ctx context.Context, in DeleteIn) error {
 	}
 
 	if err := {{.PackageName}}Model.Delete(ctx, query, args); err != nil {
-		return err
+		return fmt.Errorf("model delete {{.PackageName}} err: %w", err)
 	}
 
 	return nil
