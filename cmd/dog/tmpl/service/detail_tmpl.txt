@@ -3,6 +3,7 @@ package {{.PackageName}}
 import (
 	"context"
 	"dog/model"
+	"fmt"
 )
 
 type DetailIn struct {

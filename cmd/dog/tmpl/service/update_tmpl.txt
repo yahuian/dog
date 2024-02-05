@@ -4,6 +4,7 @@ import (
 	"context"
 	"dog/errcode"
 	"dog/model"
+	"fmt"
 )
 
 type UpdateIn struct {

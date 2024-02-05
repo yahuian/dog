@@ -4,6 +4,7 @@ import (
 	"context"
 	"dog/model"
 	"dog/service"
+	"fmt"
 )
 
 type ListIn struct {
