@@ -11,15 +11,15 @@ import (
 type a{{.ModelName}} struct{}
 
 func {{.PackageName}}Api(e *gin.RouterGroup) {
-	var c a{{.ModelName}}
+	var {{.PackageName}} a{{.ModelName}}
 
 	r := e.Group("/{{.PackageName}}")
 	{
-		r.GET("", c.List)
-		r.POST("", c.Create)
-		r.PUT("", c.Update)
-		r.DELETE("", c.Delete)
-		r.GET("/detail", c.Detail)
+		r.GET("", {{.PackageName}}.List)
+		r.POST("", {{.PackageName}}.Create)
+		r.PUT("", {{.PackageName}}.Update)
+		r.DELETE("", {{.PackageName}}.Delete)
+		r.GET("/detail", {{.PackageName}}.Detail)
 	}
 }
 
