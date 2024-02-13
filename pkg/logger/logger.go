@@ -118,6 +118,14 @@ func Errorf(template string, args ...any) {
 	instance.Errorf(template, args...)
 }
 
+func Panicln(args ...any) {
+	instance.Panic(args...)
+}
+
+func Panicf(template string, args ...any) {
+	instance.Panicf(template, args...)
+}
+
 func getConsole() (zapcore.Encoder, zapcore.WriteSyncer) {
 	encoder := zapcore.NewConsoleEncoder(
 		zapcore.EncoderConfig{
