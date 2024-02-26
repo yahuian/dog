@@ -51,23 +51,23 @@ func (m *{{.ModelName}}Model) Create(ctx context.Context, data *{{.ModelName}}) 
 	return nil
 }
 
-func (m *{{.ModelName}}Model) GetOneByID(ctx context.Context, id uint) ({{.ModelName}}, error) {
+func (m *{{.ModelName}}Model) GetOneByID(ctx context.Context, id uint) (*{{.ModelName}}, error) {
 	return m.GetOne(ctx, "id = ?", id)
 }
 
-func (m *{{.ModelName}}Model) GetOne(ctx context.Context, query any, args ...any) ({{.ModelName}}, error) {
+func (m *{{.ModelName}}Model) GetOne(ctx context.Context, query any, args ...any) (*{{.ModelName}}, error) {
 	var data {{.ModelName}}
 
 	res := m.db(ctx).Where(query, args...).Limit(1).Find(&data)
 	if res.Error != nil {
-		return {{.ModelName}}{}, errcode.Server(res.Error)
+		return nil, errcode.Server(res.Error)
 	}
 
 	if data.ID == 0 {
-		return {{.ModelName}}{}, errcode.NotFoundErr
+		return nil, errcode.NotFoundErr
 	}
 
-	return data, nil
+	return &data, nil
 }
 
 func (m *{{.ModelName}}Model) GetList(ctx context.Context, opt ListOption) ([]{{.ModelName}}, int64, error) {

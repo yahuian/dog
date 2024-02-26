@@ -13,7 +13,7 @@ type CreateOut struct {
 	{{.ModelName}} model.{{.ModelName}} `json:"{{.PackageName}}"`
 }
 
-func Create(ctx context.Context, in CreateIn) (CreateOut, error) {
+func Create(ctx context.Context, in CreateIn) (*CreateOut, error) {
 	{{.PackageName}}Model := model.New{{.ModelName}}Model()
 
 	data := model.{{.ModelName}}{
@@ -21,10 +21,10 @@ func Create(ctx context.Context, in CreateIn) (CreateOut, error) {
 	}
 
 	if err := {{.PackageName}}Model.Create(ctx, &data); err != nil {
-		return CreateOut{}, err
+		return nil, err
 	}
 
-	res := CreateOut{
+	res := &CreateOut{
 		{{.ModelName}}: data,
 	}
 

@@ -10,7 +10,7 @@ type DetailIn struct {
 }
 
 type DetailOut struct {
-	{{.ModelName}} model.{{.ModelName}} `json:"{{.PackageName}}"`
+	{{.ModelName}} *model.{{.ModelName}} `json:"{{.PackageName}}"`
 }
 
 func Detail(ctx context.Context, in DetailIn) (DetailOut, error) {

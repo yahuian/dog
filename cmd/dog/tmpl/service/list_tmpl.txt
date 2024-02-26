@@ -15,7 +15,7 @@ type ListOut struct {
 	Total int64        `json:"total"`
 }
 
-func List(ctx context.Context, in ListIn) (ListOut, error) {
+func List(ctx context.Context, in ListIn) (*ListOut, error) {
 	{{.PackageName}}Model := model.New{{.ModelName}}Model()
 
 	opt := model.ListOption{
@@ -25,10 +25,10 @@ func List(ctx context.Context, in ListIn) (ListOut, error) {
 
 	list, total, err := {{.PackageName}}Model.GetList(ctx, opt)
 	if err != nil {
-		return ListOut{}, err
+		return nil, err
 	}
 
-	res := ListOut{
+	res := &ListOut{
 		List:  list,
 		Total: total,
 	}
