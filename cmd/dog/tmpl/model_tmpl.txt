@@ -20,16 +20,25 @@ type {{.ModelName}} struct {
 
 type {{.ModelName}}Model struct {
 	table string
+	tx    *gorm.DB
 }
 
-func New{{.ModelName}}Model() *{{.ModelName}}Model {
-	return &{{.ModelName}}Model{
+func New{{.ModelName}}Model(tx ...*gorm.DB) *{{.ModelName}}Model {
+	m := &{{.ModelName}}Model{
 		table: "", // TODO
 	}
+	if len(tx) != 0 {
+		m.tx = tx[0]
+	}
+	return m
 }
 
 func (m *{{.ModelName}}Model) db(ctx context.Context) *gorm.DB {
-	return getDB().Table(m.table).WithContext(ctx)
+	conn := GetDB()
+	if m.tx != nil {
+		conn = m.tx
+	}
+	return conn.Table(m.table).WithContext(ctx)
 }
 
 func (m *{{.ModelName}}Model) Create(ctx context.Context, data *{{.ModelName}}) error {
