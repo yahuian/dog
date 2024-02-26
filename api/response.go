@@ -48,3 +48,8 @@ func Success(ctx *gin.Context, msg string, data any) {
 
 	ctx.JSON(http.StatusOK, resp)
 }
+
+// RespID 供创建接口使用
+type RespID struct {
+	ID uint `json:"id"`
+}
