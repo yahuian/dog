@@ -3,7 +3,6 @@ package {{.PackageName}}
 import (
 	"context"
 	"dog/model"
-	"fmt"
 )
 
 type CreateIn struct {
@@ -22,7 +21,7 @@ func Create(ctx context.Context, in CreateIn) (CreateOut, error) {
 	}
 
 	if err := {{.PackageName}}Model.Create(ctx, &data); err != nil {
-		return CreateOut{}, fmt.Errorf("model create {{.PackageName}} err: %w", err)
+		return CreateOut{}, err
 	}
 
 	res := CreateOut{
