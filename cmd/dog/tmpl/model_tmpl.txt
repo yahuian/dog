@@ -19,30 +19,23 @@ type {{.ModelName}} struct {
 }
 
 type {{.ModelName}}Model struct {
-	table string
-	tx    *gorm.DB
+	*BaseModel
 }
 
 func New{{.ModelName}}Model(tx ...*gorm.DB) *{{.ModelName}}Model {
+	base := NewBaseModel(tx...)
+
+	base.DB = base.DB.Table("") // TODO
+
 	m := &{{.ModelName}}Model{
-		table: "", // TODO
+		BaseModel: base,
 	}
-	if len(tx) != 0 {
-		m.tx = tx[0]
-	}
+
 	return m
 }
 
-func (m *{{.ModelName}}Model) db(ctx context.Context) *gorm.DB {
-	conn := GetDB()
-	if m.tx != nil {
-		conn = m.tx
-	}
-	return conn.Table(m.table).WithContext(ctx)
-}
-
 func (m *{{.ModelName}}Model) Create(ctx context.Context, data *{{.ModelName}}) error {
-	res := m.db(ctx).Create(data)
+	res := m.DB.WithContext(ctx).Create(data)
 
 	if res.Error != nil {
 		return errcode.Server(res.Error)
@@ -58,7 +51,7 @@ func (m *{{.ModelName}}Model) GetOneByID(ctx context.Context, id uint) (*{{.Mode
 func (m *{{.ModelName}}Model) GetOne(ctx context.Context, query any, args ...any) (*{{.ModelName}}, error) {
 	var data {{.ModelName}}
 
-	res := m.db(ctx).Where(query, args...).Limit(1).Find(&data)
+	res := m.DB.WithContext(ctx).Where(query, args...).Limit(1).Find(&data)
 	if res.Error != nil {
 		return nil, errcode.Server(res.Error)
 	}
@@ -76,7 +69,7 @@ func (m *{{.ModelName}}Model) GetList(ctx context.Context, opt ListOption) ([]{{
 		total int64
 	)
 
-	query := m.db(ctx).Where(opt.Query, opt.Args...)
+	query := m.DB.WithContext(ctx).Where(opt.Query, opt.Args...)
 
 	res := query.Model(&{{.ModelName}}{}).Count(&total)
 	if res.Error != nil {
@@ -99,7 +92,7 @@ func (m *{{.ModelName}}Model) GetList(ctx context.Context, opt ListOption) ([]{{
 func (m *{{.ModelName}}Model) Count(ctx context.Context, query any, args ...any) (int64, error) {
 	var total int64
 
-	res := m.db(ctx).Model(&{{.ModelName}}{}).Where(query, args...).Count(&total)
+	res := m.DB.WithContext(ctx).Model(&{{.ModelName}}{}).Where(query, args...).Count(&total)
 	if res.Error != nil {
 		return 0, errcode.Server(res.Error)
 	}
@@ -112,7 +105,7 @@ func (m *{{.ModelName}}Model) UpdateByID(ctx context.Context, data map[string]an
 }
 
 func (m *{{.ModelName}}Model) Update(ctx context.Context, data map[string]any, query any, args ...any) error {
-	res := m.db(ctx).Model(&{{.ModelName}}{}).Where(query, args...).Updates(data)
+	res := m.DB.WithContext(ctx).Model(&{{.ModelName}}{}).Where(query, args...).Updates(data)
 
 	if res.Error != nil {
 		return errcode.Server(res.Error)
@@ -126,7 +119,7 @@ func (m *{{.ModelName}}Model) DeleteByID(ctx context.Context, id uint) error {
 }
 
 func (m *{{.ModelName}}Model) Delete(ctx context.Context, query any, args ...any) error {
-	res := m.db(ctx).Where(query, args...).Delete(&{{.ModelName}}{})
+	res := m.DB.WithContext(ctx).Where(query, args...).Delete(&{{.ModelName}}{})
 
 	if res.Error != nil {
 		return errcode.Server(res.Error)

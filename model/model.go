@@ -26,3 +26,21 @@ func Init() error {
 
 	return nil
 }
+
+type BaseModel struct {
+	DB *gorm.DB
+}
+
+func NewBaseModel(tx ...*gorm.DB) *BaseModel {
+	var db *gorm.DB
+
+	if len(tx) != 0 {
+		db = tx[0]
+	} else {
+		db = GetDB()
+	}
+
+	return &BaseModel{
+		DB: db,
+	}
+}
