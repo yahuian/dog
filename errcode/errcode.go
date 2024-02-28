@@ -75,5 +75,5 @@ var (
 	NotFoundErr     = newErrcode(http.StatusNotFound, "not found")
 
 	// 业务细分错误用中文，方便直接返回给前端提醒用户
-	// user 41xxx
+	// user 401xx
 )
