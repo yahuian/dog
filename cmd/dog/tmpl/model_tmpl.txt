@@ -95,6 +95,22 @@ func (m *{{.ModelName}}Model) GetList(ctx context.Context, opt ListOption) ([]{{
 	return list, total, nil
 }
 
+func (m *{{.ModelName}}Model) GetAll(ctx context.Context, opt AllOption) ([]{{.ModelName}}, error) {
+	var list []{{.ModelName}}
+
+	order := opt.Order
+	if order == "" {
+		order = "id DESC"
+	}
+
+	res := m.DB.WithContext(ctx).Where(opt.Query, opt.Args...).Order(order).Find(&list)
+	if res.Error != nil {
+		return nil, errcode.Server(res.Error)
+	}
+
+	return list, nil
+}
+
 func (m *{{.ModelName}}Model) Count(ctx context.Context, query any, args ...any) (int64, error) {
 	var total int64
 

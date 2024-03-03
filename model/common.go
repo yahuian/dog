@@ -7,3 +7,9 @@ type ListOption struct {
 	Args  []any
 	Order string
 }
+
+type AllOption struct {
+	Query any
+	Args  []any
+	Order string
+}
