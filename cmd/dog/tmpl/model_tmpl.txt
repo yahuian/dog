@@ -81,7 +81,13 @@ func (m *{{.ModelName}}Model) GetList(ctx context.Context, opt ListOption) ([]{{
 	}
 
 	offset := (opt.Page - 1) * opt.Size
-	res = query.Offset(offset).Limit(opt.Size).Order(opt.Order).Order("id DESC").Find(&list)
+
+	order := opt.Order
+	if order == "" {
+		order = "id DESC"
+	}
+
+	res = query.Offset(offset).Limit(opt.Size).Order(order).Find(&list)
 	if res.Error != nil {
 		return nil, 0, errcode.Server(res.Error)
 	}
