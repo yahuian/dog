@@ -54,7 +54,7 @@ func (a *a{{.ModelName}}) List(ctx *gin.Context) {
 // @Tags {{.PackageName}}
 // @Summary 创建
 // @Router /{{.PackageName}} [post]
-// @Param body body {{.PackageName}}.CreateIn false "请求参数"
+// @Param body body {{.PackageName}}.CreateIn true "请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
 // @Success 200 {object} Resp{data=RespID}
 func (a *a{{.ModelName}}) Create(ctx *gin.Context) {
@@ -80,7 +80,7 @@ func (a *a{{.ModelName}}) Create(ctx *gin.Context) {
 // @Tags {{.PackageName}}
 // @Summary 更新
 // @Router /{{.PackageName}} [put]
-// @Param body body {{.PackageName}}.UpdateIn false "请求参数"
+// @Param body body {{.PackageName}}.UpdateIn true "请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
 // @Success 200 {object} Resp
 func (a *a{{.ModelName}}) Update(ctx *gin.Context) {
@@ -105,7 +105,7 @@ func (a *a{{.ModelName}}) Update(ctx *gin.Context) {
 // @Tags {{.PackageName}}
 // @Summary 删除
 // @Router /{{.PackageName}} [delete]
-// @Param body body {{.PackageName}}.DeleteIn false "请求参数"
+// @Param body body {{.PackageName}}.DeleteIn true "请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
 // @Success 200 {object} Resp
 func (a *a{{.ModelName}}) Delete(ctx *gin.Context) {
@@ -130,7 +130,7 @@ func (a *a{{.ModelName}}) Delete(ctx *gin.Context) {
 // @Tags {{.PackageName}}
 // @Summary 详情
 // @Router /{{.PackageName}}/detail [get]
-// @Param query query {{.PackageName}}.DetailIn false "请求参数"
+// @Param query query {{.PackageName}}.DetailIn true "请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
 // @Success 200 {object} Resp{data=model.{{.ModelName}}}
 func (a *a{{.ModelName}}) Detail(ctx *gin.Context) {
