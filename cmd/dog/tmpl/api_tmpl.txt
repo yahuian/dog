@@ -23,7 +23,6 @@ func {{.PackageName}}Api(e *gin.RouterGroup) {
 	}
 }
 
-// @Accept json
 // @Produce	json
 // @Tags {{.PackageName}}
 // @Summary	列表
@@ -125,7 +124,6 @@ func (a *a{{.ModelName}}) Delete(ctx *gin.Context) {
 	Success(ctx, "ok", nil)
 }
 
-// @Accept json
 // @Produce json
 // @Tags {{.PackageName}}
 // @Summary 详情
