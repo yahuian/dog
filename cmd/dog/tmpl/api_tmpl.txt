@@ -30,6 +30,7 @@ func {{.PackageName}}Api(e *gin.RouterGroup) {
 // @Param query query {{.PackageName}}.ListIn	false	"请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
 // @Success 200 {object} Resp{data={{.PackageName}}.ListOut}
+// @Failure 500 {object} Resp "服务器内部错误"
 func (a *a{{.ModelName}}) List(ctx *gin.Context) {
 	var in {{.PackageName}}.ListIn
 	if err := ctx.ShouldBindQuery(&in); err != nil {
@@ -55,7 +56,9 @@ func (a *a{{.ModelName}}) List(ctx *gin.Context) {
 // @Router /{{.PackageName}} [post]
 // @Param body body {{.PackageName}}.CreateIn true "请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
+// @Failure 401 {object} Resp "未登录"
 // @Success 200 {object} Resp{data=RespID}
+// @Failure 500 {object} Resp "服务器内部错误"
 func (a *a{{.ModelName}}) Create(ctx *gin.Context) {
 	var in {{.PackageName}}.CreateIn
 	if err := ctx.ShouldBindJSON(&in); err != nil {
@@ -81,7 +84,10 @@ func (a *a{{.ModelName}}) Create(ctx *gin.Context) {
 // @Router /{{.PackageName}} [put]
 // @Param body body {{.PackageName}}.UpdateIn true "请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
+// @Failure 401 {object} Resp "未登录"
+// @Failure 404 {object} Resp "not found"
 // @Success 200 {object} Resp
+// @Failure 500 {object} Resp "服务器内部错误"
 func (a *a{{.ModelName}}) Update(ctx *gin.Context) {
 	var in {{.PackageName}}.UpdateIn
 	if err := ctx.ShouldBindJSON(&in); err != nil {
@@ -106,7 +112,10 @@ func (a *a{{.ModelName}}) Update(ctx *gin.Context) {
 // @Router /{{.PackageName}} [delete]
 // @Param body body {{.PackageName}}.DeleteIn true "请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
+// @Failure 401 {object} Resp "未登录"
+// @Failure 404 {object} Resp "not found"
 // @Success 200 {object} Resp
+// @Failure 500 {object} Resp "服务器内部错误"
 func (a *a{{.ModelName}}) Delete(ctx *gin.Context) {
 	var in {{.PackageName}}.DeleteIn
 	if err := ctx.ShouldBindJSON(&in); err != nil {
@@ -130,7 +139,9 @@ func (a *a{{.ModelName}}) Delete(ctx *gin.Context) {
 // @Router /{{.PackageName}}/detail [get]
 // @Param query query {{.PackageName}}.DetailIn true "请求参数"
 // @Failure 400 {object} Resp "请求参数错误"
+// @Failure 404 {object} Resp "not found"
 // @Success 200 {object} Resp{data=model.{{.ModelName}}}
+// @Failure 500 {object} Resp "服务器内部错误"
 func (a *a{{.ModelName}}) Detail(ctx *gin.Context) {
 	var in {{.PackageName}}.DetailIn
 	if err := ctx.ShouldBindQuery(&in); err != nil {
